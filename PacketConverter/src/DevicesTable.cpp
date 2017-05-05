@@ -36,6 +36,15 @@ bool DevicesTable::isMine(std::string deviceId) {
     return false;
 }
 
+bool DevicesTable::isInTable(std::string deviceId) {
+    std::lock_guard<std::mutex> guard(DevicesTable::mapMutex);
+    std::map<std::string, EndDevice>::iterator iterator;
+    if (isInMap(deviceId,iterator)){
+        return true;
+    }
+    return false;
+}
+
 bool DevicesTable::hasSessionKey(std::string deviceId) {
     std::lock_guard<std::mutex> guard(DevicesTable::mapMutex);
     std::map<std::string, EndDevice>::iterator iterator;
@@ -210,6 +219,7 @@ void DevicesTable::updateByTimer(std::chrono::seconds currentTime) {
             }
             ++it;
         }
+        this->time = currentTime;
     }
 }
 
@@ -218,6 +228,10 @@ void DevicesTable::resetDutyCycle() {
     this->onAir0 = 60*60;
     this->onAir1 = 60*60*10;
     this->onAir10 = 60*60*100;
+    if (APP_DEBUG){
+        std::cout << "debug out:" << std::endl;
+        std::cout << "timers reset" << std::endl;
+    }
 }
 
 long DevicesTable::remainingDutyCycle(std::string deviceId) {
@@ -225,16 +239,14 @@ long DevicesTable::remainingDutyCycle(std::string deviceId) {
     std::map<std::string, EndDevice>::iterator iterator;
     if (isInMap(deviceId,iterator)){
         long currentOnAirCounter;
-        if (iterator->second.frequency >= 863000000 && iterator->second.frequency < 868000000){
-            currentOnAirCounter = this->onAir0;
-        }
-        else if (iterator->second.frequency >= 868000000 && iterator->second.frequency <= 868600000){
+        uint32_t frequency = iterator->second.frequency;
+        if ((865000000 <= frequency && frequency <= 868600000) || (869700000 <= frequency && frequency <= 870000000)){
             currentOnAirCounter = this->onAir1;
         }
-        else if (iterator->second.frequency >= 868700000 && iterator->second.frequency <= 869200000){
+        else if (868700000 <= frequency && frequency <= 869200000){
             currentOnAirCounter = this->onAir0;
         }
-        else if (iterator->second.frequency >= 869400000 && iterator->second.frequency <= 869650000){
+        else if ( 869400000 <= frequency && frequency <= 869650000){
             currentOnAirCounter = this->onAir10;
         }
         else {
@@ -275,6 +287,8 @@ long DevicesTable::calculateDutyCycle(std::map<std::string, EndDevice>::iterator
     double zero = 0;
     double numSymbols = 8 + std::max(ceil1*coderate,zero);
     double tPayload = numSymbols*tSym;
+    //to disable duty cycle
+    //return 0;
     return tPreamble+tPayload;
 }
 
@@ -283,16 +297,14 @@ bool DevicesTable::reduceDutyCycle(std::string deviceId, uint8_t messageSize) {
     std::map<std::string, EndDevice>::iterator iterator;
     if (isInMap(deviceId,iterator)){
         long *currentOnAirCounter;
-        if (iterator->second.frequency >= 863000000 && iterator->second.frequency < 868000000){
-            currentOnAirCounter = &onAir0;
-        }
-        else if (iterator->second.frequency >= 868000000 && iterator->second.frequency <= 868600000){
+        uint32_t frequency = iterator->second.frequency;
+        if ((865000000 <= frequency && frequency <= 868600000) || (869700000 <= frequency && frequency <= 870000000)){
             currentOnAirCounter = &onAir1;
         }
-        else if (iterator->second.frequency >= 868700000 && iterator->second.frequency <= 869200000){
+        else if (868700000 <= frequency && frequency <= 869200000){
             currentOnAirCounter = &onAir0;
         }
-        else if (iterator->second.frequency >= 869400000 && iterator->second.frequency <= 869650000){
+        else if ( 869400000 <= frequency && frequency <= 869650000){
             currentOnAirCounter = &onAir10;
         }
         else {
@@ -311,8 +323,11 @@ bool DevicesTable::reduceDutyCycle(std::string deviceId, uint8_t messageSize) {
         onAir10 -= messageTime;
         if (APP_DEBUG){
             std::cout << "debug out:" << std::endl;
+            std::cout << "msg size:" << unsigned(messageSize) << std::endl;
             std::cout << "reduced time:" << messageTime << std::endl;
-            std::cout << "remaining time:" << *currentOnAirCounter << std::endl;
+            std::cout << "remaining time0:" << onAir0 << std::endl;
+            std::cout << "remaining time1:" << onAir1 << std::endl;
+            std::cout << "remaining time10:" << onAir10 << std::endl;
         }
         return true;
     }

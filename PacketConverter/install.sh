@@ -25,8 +25,21 @@ if [ "$command" == "default" ]; then
 fi
 if [ "$command" == "daemon" ]; then
 	echo "Installing daemon service:"
-	cp ./packet_converter.service /lib/systemd/system/
+	touch /lib/systemd/system/packet_converter.service
+	echo "Description=PacketConverter daemon" > /lib/systemd/system/packet_converter.service
+	echo "[Service]" >> /lib/systemd/system/packet_converter.service
+	echo "WorkingDirectory=`pwd`" >> /lib/systemd/system/packet_converter.service 
+	echo "ExecStart=`pwd`/start.sh" >> /lib/systemd/system/packet_converter.service
+	echo "SyslogIdentifier=packet_converter" >> /lib/systemd/system/packet_converter.service
+	echo "Restart=always" >> /lib/systemd/system/packet_converter.service
+	echo "RestartSec=5" >> /lib/systemd/system/packet_converter.service
+	echo "[Install]" >> /lib/systemd/system/packet_converter.service
+	echo "WantedBy=multi-user.target" >> /lib/systemd/system/packet_converter.service
+	systemctl daemon-reload
 	systemctl enable packet_converter.service
+	echo "Service successfully installed and is located at /lib/systemd/system/packet_converter.service"
+	echo "To disable it, run as super user:"
+	echo "  systemctl disable packet_converter.service"
 fi
 if [ "$command" == "clear" ]; then
 	echo "Clearing all install files:"

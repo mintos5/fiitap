@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <bits/stdc++.h>
 #include <base64.h>
 #include <Encryption.h>
 #include <MessageConverter.h>

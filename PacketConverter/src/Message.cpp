@@ -234,6 +234,8 @@ Message Message::createRXL(std::string devId, LoraPacket in, uint8_t *key, uint1
     data["rssi"] = in.rssi;
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
+    data["type"] = "normal";
+
     if (in.type == DATA_UP || in.type == HELLO_UP){
         data["conf_need"] = false;
     }
@@ -303,6 +305,8 @@ Message Message::createREGR(std::string devId, LoraPacket in, unsigned int dutyC
     data["rssi"] = in.rssi;
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
+    data["type"] = "reg";
+
     if (APP_DEBUG){
         std::cout << "debug out:" << std::endl;
         std::cout << out.toStiot() << std::endl;

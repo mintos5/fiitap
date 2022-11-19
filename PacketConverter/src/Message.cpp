@@ -235,7 +235,9 @@ Message Message::createRXL(std::string devId, LoraPacket in, uint8_t *key, uint1
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
     data["type"] = "normal";
-    data["ack"] = Message:getAck(in.ack);
+    data["freq"] = in.frequency;
+    data["ack"] = Message::getAck(in.ack);
+    data["power"] = in.rfPower;
 
     if (in.type == DATA_UP || in.type == HELLO_UP){
         data["conf_need"] = false;
@@ -294,6 +296,8 @@ Message Message::createREGR(std::string devId, LoraPacket in, unsigned int dutyC
     data["rssi"] = in.rssi;
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
+    data["freq"] = in.frequency;
+    data["power"] = in.rfPower;
     data["type"] = "reg";
 
     if (APP_DEBUG){
@@ -641,9 +645,7 @@ bool Message::isLoraPacketCorrect(uint8_t *in,int size,uint32_t compare) {
 }
 
 std::string Message::getAck(LoraAck ack) {
-  switch (ack) {
-    case NO_ACK: return "UNSUPPORTED";
-    case OPTIONAL_ACK: return "VOLATILE";
-    case MANDATORY_ACK: return "MANDATORY";
-  }
+  if (ack == NO_ACK) return "UNSUPPORTED";
+  if (ack == OPTIONAL_ACK) return "VOLATILE";
+  if (ack == MANDATORY_ACK) return "MANDATORY";
 };

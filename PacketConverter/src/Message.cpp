@@ -235,6 +235,7 @@ Message Message::createRXL(std::string devId, LoraPacket in, uint8_t *key, uint1
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
     data["type"] = "normal";
+    data["ack"] = Message:getAck(in.ack);
 
     if (in.type == DATA_UP || in.type == HELLO_UP){
         data["conf_need"] = false;
@@ -242,18 +243,6 @@ Message Message::createRXL(std::string devId, LoraPacket in, uint8_t *key, uint1
     else if (in.type == EMERGENCY_UP){
         data["conf_need"] = true;
     }
-    std::string ackString;
-    if (in.ack==NO_ACK){
-        ackString = "UNSUPPORTED";
-    }
-    else if (in.ack==OPTIONAL_ACK){
-        ackString = "VOLATILE";
-    }
-    else if (in.ack==MANDATORY_ACK){
-        ackString = "MANDATORY";
-    }
-    data["ack"] = ackString;
-
 
     Encryption::decrypt(in.payload,in.size,key);
     uint8_t *dataPointer = in.payload;
@@ -650,3 +639,11 @@ bool Message::isLoraPacketCorrect(uint8_t *in,int size,uint32_t compare) {
     }
     return false;
 }
+
+std::string Message::getAck(LoraAck ack) {
+  switch (ack) {
+    case NO_ACK: return "UNSUPPORTED";
+    case OPTIONAL_ACK: return "VOLATILE";
+    case MANDATORY_ACK: return "MANDATORY";
+  }
+};

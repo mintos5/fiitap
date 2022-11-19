@@ -81,6 +81,8 @@ public:
     static Message createKEYS(std::string devId,uint16_t seq,std::string key);
     static Message createKEYR(std::string devId);
     static Message createERR(uint32_t error,std::string description);
+
+    static std::string getAck(LoraAck ack);
 };
 
 

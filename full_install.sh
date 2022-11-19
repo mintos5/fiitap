@@ -3,16 +3,17 @@ if [ $UID != 0 ]; then
 	echo "ERROR: Not root user?"
 	exit 1
 fi
-echo "installing openssl library"
+echo "INFO: Installing openssl library"
 apt-get update
 apt-get install libssl-dev
-echo "installing lora_gateway"
+echo "INFO: Installing lora_gateway driver"
 cd ./lora_gateway
 make
 make install
 cd ..
-echo "installing PacketConverter"
+echo "INFO: Installing PacketConverter, a LoRa@FIIT access point agent"
 cd ./PacketConverter
 ./install.sh
 cd ..
-echo "all done to install systemd daemon from run PacketConverter folder using ./install.sh daemon"
+echo "SUCCESS: All done"
+echo "INFO: To install systemd daemon, run './install.sh daemon' from PacketConverter sub-folder"

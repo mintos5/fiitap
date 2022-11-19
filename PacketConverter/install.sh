@@ -24,6 +24,7 @@ if [ "$command" == "default" ]; then
 	cd ..
 fi
 if [ "$command" == "daemon" ]; then
+  echo "WARNING: Installation should be done from PacketConverter folder by running ./install.sh daemon"
 	echo "Installing daemon service:"
 	touch /lib/systemd/system/packet_converter.service
 	echo "[Unit]" > /lib/systemd/system/packet_converter.service

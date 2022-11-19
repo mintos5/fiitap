@@ -15,4 +15,4 @@ echo "installing PacketConverter"
 cd ./PacketConverter
 ./install.sh
 cd ..
-echo "all done to install systemd daemon run ./PacketConverter/install.sh daemon"
+echo "all done to install systemd daemon from run PacketConverter folder using ./install.sh daemon"

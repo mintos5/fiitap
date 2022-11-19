@@ -77,7 +77,7 @@ bool DevicesTable::setSeq(std::string deviceId, uint16_t seq) {
     return false;
 }
 
-bool DevicesTable::setSessionkey(std::string deviceId, uint8_t *sessionKey, uint16_t seq) {
+bool DevicesTable::setSessionKey(std::string deviceId, uint8_t *sessionKey, uint16_t seq) {
     std::lock_guard<std::mutex> guard(DevicesTable::mapMutex);
     std::map<std::string, EndDevice>::iterator iterator;
     if (isInMap(deviceId,iterator)){

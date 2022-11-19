@@ -179,7 +179,7 @@ void MessageConverter::fromStiot() {
                     std::vector<uint8_t > keyVector(dataSize);
                     Message::fromBase64(keyB64,keyVector.data(),dataSize);
                     //update data
-                    devicesTable.setSessionkey(in.devId, keyVector.data(), seq);
+                    devicesTable.setSessionKey(in.devId, keyVector.data(), seq);
                     //notify waiting thread
                     std::unique_lock<std::mutex> loraGuardData(this->loraDataMutex);
                     loraGuardData.unlock();
@@ -236,7 +236,7 @@ void MessageConverter::fromStiot() {
                         }
                         std::cout << std::endl;
                     }
-                    devicesTable.setSessionkey(in.devId, sessionKey.data(), 0);
+                    devicesTable.setSessionKey(in.devId, sessionKey.data(), 0);
                     //message is ready
                     uint16_t seqNum;
                     LoraPacket out = Message::fromStiot(in,devicesTable.getSessionKey(in.devId),seqNum);

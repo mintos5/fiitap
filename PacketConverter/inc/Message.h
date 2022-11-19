@@ -55,7 +55,7 @@ struct LoraPacket{
 class Message {
 
 public:
-    //pomocne funkcie
+    // helper functions
     static uint8_t createNetworkData(nlohmann::json paramArray, uint8_t *data,bool full);
     static uint32_t createCheck(uint8_t *data, int size);
     static bool isLoraPacketCorrect(uint8_t *in,int size,uint32_t compare);

@@ -26,6 +26,7 @@ fi
 if [ "$command" == "daemon" ]; then
 	echo "Installing daemon service:"
 	touch /lib/systemd/system/packet_converter.service
+	echo "[Unit]" > /lib/systemd/system/packet_converter.service
 	echo "Description=PacketConverter daemon" > /lib/systemd/system/packet_converter.service
 	echo "[Service]" >> /lib/systemd/system/packet_converter.service
 	echo "WorkingDirectory=`pwd`" >> /lib/systemd/system/packet_converter.service 

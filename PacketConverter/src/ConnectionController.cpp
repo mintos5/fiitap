@@ -39,7 +39,7 @@ int ConnectionController::start() {
     int connectReturn;
     while(connectReturn = BIO_do_connect(bio),connectReturn <= 0){
         if(!BIO_should_retry(bio)){
-            std::cerr << "Error connecting  to server" << std::endl;
+            std::cerr << "Error connecting to server" << std::endl;
             BIO_free_all(bio);
             SSL_CTX_free(ctx);
             return -1;

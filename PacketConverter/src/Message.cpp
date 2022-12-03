@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <bits/stdc++.h>
 #include <base64.h>
 #include <Encryption.h>
 #include <MessageConverter.h>
@@ -233,24 +234,17 @@ Message Message::createRXL(std::string devId, LoraPacket in, uint8_t *key, uint1
     data["rssi"] = in.rssi;
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
+    data["type"] = "normal";
+    data["freq"] = in.frequency;
+    data["ack"] = Message::getAck(in.ack);
+    data["power"] = in.rfPower;
+
     if (in.type == DATA_UP || in.type == HELLO_UP){
         data["conf_need"] = false;
     }
     else if (in.type == EMERGENCY_UP){
         data["conf_need"] = true;
     }
-    std::string ackString;
-    if (in.ack==NO_ACK){
-        ackString = "UNSUPPORTED";
-    }
-    else if (in.ack==OPTIONAL_ACK){
-        ackString = "VOLATILE";
-    }
-    else if (in.ack==MANDATORY_ACK){
-        ackString = "MANDATORY";
-    }
-    data["ack"] = ackString;
-
 
     Encryption::decrypt(in.payload,in.size,key);
     uint8_t *dataPointer = in.payload;
@@ -302,6 +296,10 @@ Message Message::createREGR(std::string devId, LoraPacket in, unsigned int dutyC
     data["rssi"] = in.rssi;
     data["snr"] = in.snr;
     data["duty_c"] = dutyC;
+    data["freq"] = in.frequency;
+    data["power"] = in.rfPower;
+    data["type"] = "reg";
+
     if (APP_DEBUG){
         std::cout << "debug out:" << std::endl;
         std::cout << out.toStiot() << std::endl;
@@ -645,3 +643,9 @@ bool Message::isLoraPacketCorrect(uint8_t *in,int size,uint32_t compare) {
     }
     return false;
 }
+
+std::string Message::getAck(LoraAck ack) {
+  if (ack == NO_ACK) return "UNSUPPORTED";
+  if (ack == OPTIONAL_ACK) return "VOLATILE";
+  if (ack == MANDATORY_ACK) return "MANDATORY";
+};

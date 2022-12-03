@@ -47,7 +47,7 @@ public:
     bool hasSessionKeyCheck(std::string deviceId);
 
     bool setSeq(std::string deviceId,uint16_t seq);
-    bool setSessionkey(std::string deviceId, uint8_t *sessionKey, uint16_t seq);   //will return bool if finded
+    bool setSessionKey(std::string deviceId, uint8_t *sessionKey, uint16_t seq);   //will return bool if finded
     bool setSessionKeyCheck(std::string deviceId, bool set);
 
     uint8_t *getSessionKey(std::string deviceId);

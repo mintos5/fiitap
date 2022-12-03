@@ -62,7 +62,7 @@ void ConcentratorController::join() {
 
     int stopStatus = lgw_stop();
     if (stopStatus == LGW_HAL_SUCCESS) {
-        std::cout << "Concentrator stoped successfully" << std::endl;
+        std::cout << "Concentrator stopped successfully" << std::endl;
     } else {
         std::cerr << "WARNING: failed to stop concentrator successfully" << std::endl;
     }

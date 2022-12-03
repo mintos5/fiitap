@@ -4,6 +4,7 @@
 
 #include <random>
 #include <iostream>
+#include <bits/stdc++.h>
 #include "DiffieHellman.h"
 
 void DiffieHellman::getDHB(uint8_t *preSharedKey, uint8_t *publicKey, uint8_t *privateKey) {
